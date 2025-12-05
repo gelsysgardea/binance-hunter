@@ -1,116 +1,53 @@
-import asyncio
-import httpx
-import random
-from datetime import datetime
+from typing import Literal, Tuple, Optional
+from dataclasses import dataclass
 
+import httpx
 from core.binance.api import BinanceAPI
 
-from typing import Literal
-
+@dataclass
+class ClaimResult:
+    status: Literal["SUCCESS", "FAIL", "CAPTCHA", "EXPIRED", "RATE_LIMIT", "ALREADY_CLAIMED", "INVALID"]
+    amount: float = 0.0
+    currency: str = ""
+    message: str = ""
 
 class RedpacketHandler:
-    TYPES = Literal[
-        "processed", "claimed", "captcha", "too_many_requests", "session_expired"
-    ]
-
-    def __init__(self) -> None:
-        self.LAST_TIMESTAMP = 0
-        self.PROCESSED_CODES: list = []
-        self.IS_TIMEOUT: bool = False
-        self.IS_LAST_PROCESSED: bool = True
-
-    async def handle_response(self, response: httpx.Response) -> TYPES:
-        """
-        Handle the response codes/messages/data an return the according type.
-
-        :response: httpx.Response
-        :return: Literal[...]
-        """
-        response_json = response.json()
+    async def handle_response(self, response_json: dict) -> ClaimResult:
         data = response_json.get("data", None)
         code = response_json.get("code", None)
 
-        if response_json["success"]:
-            currency = response_json["data"]["currency"]
-            amount = response_json["data"]["grabAmountStr"]
-            print(f"[ CLAIMED ] {amount} {currency}")
-            return "claimed"
+        if response_json.get("success"):
+            amount_str = response_json["data"]["grabAmountStr"]
+            return ClaimResult(
+                status="SUCCESS",
+                amount=float(amount_str),
+                currency=response_json["data"]["currency"],
+                message=f"{amount_str} {response_json['data']['currency']}"
+            )
 
-        elif data and "validateId" in data:
-            print(f"[ WARNING ] Captcha detected: sleeping for 1 hour.")
-            return "captcha"
+        if data and "validateId" in data:
+            return ClaimResult(status="CAPTCHA", message="¡MADRES! CAPTCHA detectado.")
 
-        elif code not in [
-            "100002001",
-            "403067",
-            "403802",
-            "403803",
-            "PAY4001COM000",
-        ]:
-            print(f"[ ERROR] An unexpected return type: {response_json}")
-            return "processed"
+        if code not in ["100002001", "403067", "403802", "403803", "PAY4001COM000"]:
+            return ClaimResult(status="FAIL", message=f"Error inesperado: {response_json}")
 
         match code:
             case "100002001":
-                print(
-                    "Session expired, please re-enter new credentials in core/config.py"
-                )
-                return "session_expired"
+                return ClaimResult(status="EXPIRED", message="Sesión Expirada. ¡A renovar cookies!")
             case "403067":
-                print("Too many requests: sleeping for 1 hour")
-                return "too_many_requests"
+                return ClaimResult(status="RATE_LIMIT", message="La chota de Binance nos trae en la mira.")
             case "403802":
-                print("Redpacket is already fully-claimed.")
-                return "processed"
-            case "403803":
-                print("Invalid repacket code entered.")
-                return "processed"
-            case "PAY4001COM000":
-                print("Invalid repacket code entered.")
-                return "processed"
+                return ClaimResult(status="ALREADY_CLAIMED", message="Ya se acabó el pastel.")
+            case "403803" | "PAY4001COM000":
+                return ClaimResult(status="INVALID", message="Código más chafa que un billete de 3 pesos.")
+        
+        return ClaimResult(status="FAIL", message="Respuesta desconocida.")
 
-    async def handle_codes(self, code: str) -> None:
-        """
-        Handle codes fetched from telegram channels
 
-        :code: str
-        :return: None
-        """
-        timestamp = (
-            datetime.now().replace(minute=0, second=0, microsecond=0).timestamp()
-        )
-
-        if timestamp > self.LAST_TIMESTAMP:
-            self.PROCESSED_CODES.clear()
-            self.IS_LAST_PROCESSED = True
-            self.IS_TIMEOUT = False
-            self.LAST_TIMESTAMP = timestamp
-
-        if (code in self.PROCESSED_CODES) or (not self.IS_LAST_PROCESSED):
-            return
-
-        if not self.IS_TIMEOUT:
-            self.PROCESSED_CODES.append(code)
-            self.IS_LAST_PROCESSED = False
-
-            print(f"> Processing {code}...")
-
-            await asyncio.sleep(random.randint(1, 5))
-            result: RedpacketHandler.TYPES = await self.handle_response(
-                await BinanceAPI.request_redpacket(code)
-            )
-
-            match result:
-                case "captcha" | "too_many_requests" | "session_expired":
-                    self.IS_LAST_PROCESSED = False
-                    self.IS_TIMEOUT = True
-
-                case "claimed" | "processed":
-                    self.IS_LAST_PROCESSED = True
-                    self.PROCESSED_CODES.append(code)
-
-        else:
-            print("[ INFO] Sleeping for one hour.")
-            self.IS_TIMEOUT = True
-            self.IS_LAST_PROCESSED = False
-            self.PROCESSED_CODES.clear()
+    async def claim_code(self, code: str) -> ClaimResult:
+        """Directly claims a code and returns a structured result."""
+        response = await BinanceAPI.request_redpacket(code)
+        if response is None:
+            return ClaimResult(status="FAIL", message="Fallo en la petición HTTP.")
+        
+        return await self.handle_response(response.json())

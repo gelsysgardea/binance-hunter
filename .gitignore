@@ -1,0 +1,28 @@
+# Archivos de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+venv/
+env/
+
+# Bases de datos (No subas tu memoria, esa se crea nueva en cada lugar)
+*.db
+*.sqlite3
+
+# Sesiones de Telegram (MUY IMPORTANTE: NUNCA SUBIR ESTO)
+*.session
+*.session-journal
+
+# Archivos de configuración con claves (Si tuvieras un .env)
+.env
+
+# Carpetas de compilación
+dist/
+build/
+*.spec
+
+# Logs y otros
+*.log
+.idea/

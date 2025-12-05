@@ -1,16 +1,15 @@
 import httpx
-
 from core.config import config
-
 from typing import Optional
-
 
 class BinanceAPI:
     def __init__(self) -> None: ...
 
-    async def request_redpacket(self, redpacket_code: str) -> Optional[httpx.Response]:
+    @staticmethod
+    async def request_redpacket(redpacket_code: str) -> Optional[httpx.Response]:
         """
-        Send request to Binance API and call the
+        Send request to Binance API.
+        This is a static method as it does not depend on class instance state.
         """
         async with httpx.AsyncClient(headers=config.HEADERS) as client:
             try:
@@ -25,6 +24,6 @@ class BinanceAPI:
                 return response
             except BaseException as error:
                 print(
-                    f"An unexpected error occured while processing the POST request to Binance API:\n{error=}"
+                    f"An unexpected error occurred while processing the POST request to Binance API:\n{error=}"
                 )
                 return None
