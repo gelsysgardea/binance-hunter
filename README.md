@@ -6,105 +6,40 @@
 ---
 
 ## ✨ Características Principales (v2.0.0)
-
-* 🚀 **Rendimiento Optimizado:** Migración completa de `Pyrogram` a `Telethon` para una respuesta más rápida.
-* ⏱️ **Simulación Humana:** El token se envía a la API de Binance con un delay de 1-5 segundos para evitar bloqueos por automatización.
-* 📊 **Consola Detallada:** Reportes inmediatos sobre el tipo de token encontrado, la cantidad ganada y el estado del código.
-* 🛡️ **Gestión de Errores:** Sistema de pausa automática en caso de recibir *timeouts* de la API.
-* ⚙️ **Configuración Centralizada:** Todo lo que necesitas editar está en un solo lugar: `core/config.py`.
-
----
-
-## 🛠️ Instalación Manual
-
-Sigue estos pasos para poner el bot en marcha:
-
-1.  **Instalar Python:** Descárgalo desde [python.org](https://www.python.org/ftp/python/3.11.0/python-3.11.0-amd64.exe).
-2.  **Instalar Git:** Descárgalo desde [git-scm.com](https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe).
-3.  **Clonar el repositorio:**
-    ```bash
-    git clone [https://github.com/devbutlazy/Binance-RedPacket-Wrapper](https://github.com/devbutlazy/Binance-RedPacket-Wrapper)
-    cd Binance-RedPacket-Wrapper
-    ```
-4.  **Instalar dependencias:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+* 🚀 **Rendimiento Optimizado:** Migración a `Telethon` para máxima velocidad.
+* ⏱️ **Simulación Humana:** Delay inteligente de 1-5s para evitar baneos.
+* 📊 **Consola Detallada:** Reportes en vivo de tokens, montos y estados.
+* 🛡️ **Gestión de Errores:** Pausa automática en caso de saturación (timeouts).
+* ⚙️ **Configuración Centralizada:** Todo se edita en `core/config.py`.
 
 ---
 
-## ⚙️ Configuración Paso a Paso
+## 🛠️ Instalación y Configuración
 
-### 1. Telegram API
-Consigue tu `API_HASH` y `API_ID` en [my.telegram.org](https://my.telegram.org/auth) y colócalos en `core/config.py`.
-
-### 2. Credenciales de Binance (Grabber)
-Para que el bot funcione, necesita tus headers de sesión:
-1. Inicia sesión en [Binance Crypto Box](https://www.binance.com/uk-UA/my/wallet/account/payment/cryptobox).
-2. Presiona `F12` y ve a la pestaña **Network** (Red).
-3. Introduce un código de Crypto Box manualmente.
-4. Busca el método POST llamado `grabV2`.
-5. En la sección **Request Headers**, copia y pega los valores de `cookie`, `device-info`, e `id` en el archivo `core/config.py`.
+1. **Requisitos:** Instala [Python 3.11+](https://www.python.org/downloads/) y [Git](https://git-scm.com/).
+2. **Clonar:** `git clone https://github.com/devbutlazy/Binance-RedPacket-Wrapper`
+3. **Dependencias:** Entra a la carpeta y ejecuta `pip install -r requirements.txt`
+4. **Telegram API:** Pon tu `API_HASH` y `API_ID` (de my.telegram.org) en `core/config.py`.
+5. **Binance Cookies:** - Ve a [Binance Crypto Box](https://www.binance.com/uk-UA/my/wallet/account/payment/cryptobox) y pulsa `F12`.
+   - Canjea un código, busca la petición `grabV2` en **Network**.
+   - Copia los headers (`cookie`, `device-info`, etc.) a `core/config.py`.
 
 ---
 
-## 🚀 Uso
+## 🚀 Uso y Compilación
 
-Para iniciar el bot, ejecuta:
-```bash
-python main.py
-# 🪙 Binance CryptoBox Wrapper
-![binance_wrapper](https://github.com/user-attachments/assets/e0615cb7-43e1-457f-8b68-9262a9147920)
+**Para correrlo:** `python main.py`
 
-> **Automatización inteligente para capturar Crypto Boxes de Telegram en tiempo real.**
+**Para crear un EXE:**
+Usa los archivos en la carpeta `BUILD/`. Recuerda configurar el `config.py` **antes** de compilar.
 
 ---
 
-## ✨ Características Principales (v2.0.0)
-
-* 🚀 **Rendimiento Optimizado:** Migración completa de `Pyrogram` a `Telethon` para una respuesta más rápida.
-* ⏱️ **Simulación Humana:** El token se envía a la API de Binance con un delay de 1-5 segundos para evitar bloqueos por automatización.
-* 📊 **Consola Detallada:** Reportes inmediatos sobre el tipo de token encontrado, la cantidad ganada y el estado del código.
-* 🛡️ **Gestión de Errores:** Sistema de pausa automática en caso de recibir *timeouts* de la API.
-* ⚙️ **Configuración Centralizada:** Todo lo que necesitas editar está en un solo lugar: `core/config.py`.
+## 🤝 Créditos y Personalización
+Este repositorio está basado originalmente en el trabajo de **devbutlazy**. 
+He añadido mejoras personalizadas y optimizaciones adicionales para mejorar la experiencia y la estabilidad del bot.
 
 ---
 
-## 🛠️ Instalación Manual
-
-Sigue estos pasos para poner el bot en marcha:
-
-1.  **Instalar Python:** Descárgalo desde [python.org](https://www.python.org/ftp/python/3.11.0/python-3.11.0-amd64.exe).
-2.  **Instalar Git:** Descárgalo desde [git-scm.com](https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe).
-3.  **Clonar el repositorio:**
-    ```bash
-    git clone [https://github.com/devbutlazy/Binance-RedPacket-Wrapper](https://github.com/devbutlazy/Binance-RedPacket-Wrapper)
-    cd Binance-RedPacket-Wrapper
-    ```
-4.  **Instalar dependencias:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
----
-
-## ⚙️ Configuración Paso a Paso
-
-### 1. Telegram API
-Consigue tu `API_HASH` y `API_ID` en [my.telegram.org](https://my.telegram.org/auth) y colócalos en `core/config.py`.
-
-### 2. Credenciales de Binance (Grabber)
-Para que el bot funcione, necesita tus headers de sesión:
-1. Inicia sesión en [Binance Crypto Box](https://www.binance.com/uk-UA/my/wallet/account/payment/cryptobox).
-2. Presiona `F12` y ve a la pestaña **Network** (Red).
-3. Introduce un código de Crypto Box manualmente.
-4. Busca el método POST llamado `grabV2`.
-5. En la sección **Request Headers**, copia y pega los valores de `cookie`, `device-info`, e `id` en el archivo `core/config.py`.
-
----
-
-## 🚀 Uso
-
-Para iniciar el bot, ejecuta:
-```bash
-python main.py
+## 📜 Licencia
+* **Licencia:** MIT | **Base original por:** devbutlazy
